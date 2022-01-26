@@ -1,26 +1,58 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div id="app">
+        <h1>Meine To-Do-Liste</h1>
+		<ToDos v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem"/>
+        <AddToDoButton @add-todo-event="addToDoItem"/>
+    </div>
 </template>
-
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+	console.log("app exec")
+	import ToDos from './components/ToDos'
+	import AddToDoButton from './components/AddToDoButton'
+    export default {
+		name: 'App',
+		components: {
+			ToDos,
+			AddToDoButton
+		},
+		data() {
+			return {
+				todoEntries: [
+					{
+						id: 1,
+						title: 'Infos sammeln',
+						completed: false
+					},
+					{
+						id: 2,
+						title: 'Test Projekt erstellen',
+						completed: false
+					},
+					{
+						id: 3,
+						title: 'Blog Beitrag schreiben',
+						completed: false
+					},
+					],
+				}
+			},
+			methods: {
+				addToDoItem(newToDoItem) {
+					this.todoEntries = [...this.todoEntries, newToDoItem];
+					console.log(this.todoEntries)
+				},
+				deleteToDoItem(toDoId){
+					this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
+				}
+			}
+    }
+	console.log("app end")
 </script>
+<style scr="../style.css">
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+	input {
+		margin: .4rem;
+	}
+
+
 </style>
