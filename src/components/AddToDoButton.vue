@@ -1,9 +1,9 @@
 //AddToDoButton.vue
 <template>
-    <div>
+    <div id="Add Task">
         <form @submit="addToDo">
-            <input type="text" v-model="title" name="title">
-            <button type="submit">Hinzufügen</button>
+            <input class="AddInput" type="text" v-model="title" name="title">
+            <button class="addButton" type="submit">Hinzufügen</button>
         </form>
     </div>
 </template>
@@ -34,3 +34,6 @@
         }
     }
 </script>
+<style scoped>
+	@import "../../style.css"
+</style>

@@ -1,9 +1,9 @@
 <template>
-    <div id="app">
         <h1>Meine To-Do-Liste</h1>
 		<ToDos v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem"/>
+		<br>
         <AddToDoButton @add-todo-event="addToDoItem"/>
-    </div>
+
 </template>
 <script>
 	console.log("app exec")
@@ -48,11 +48,8 @@
     }
 	console.log("app end")
 </script>
-<style scr="../style.css">
-
-	input {
-		margin: .4rem;
-	}
 
 
+<style scoped>
+	@import "../style.css"
 </style>
