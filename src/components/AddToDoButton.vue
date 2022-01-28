@@ -30,9 +30,11 @@
                 }
                 this.$emit("add-todo-event", newToDoObject);
                 this.title= '';
+
             }
         }
     }
+
 </script>
 <style scoped>
 	@import "../../style.css"
