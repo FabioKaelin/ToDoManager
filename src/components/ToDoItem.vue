@@ -1,8 +1,20 @@
 <template>
     <div class="todoitem"  @click="markCompleted" v-bind:class="{'completed':this.todo.completed}">
         <span class="Taskname">{{todo.title}}</span>
+        <input type="text" @blur="$emit('edit-todo-event', todo.id)"  class="editInput">
+        <!-- @blur="editToDoItem" -->
 
         <button class="papierkorbButton" @click="$emit('delete-todo-event', todo.id)">
+            <svg height="20" width="20">
+                <polyline points="5,7.5 5,15 7.5,17.5 12.5,17.5 15,15 15,7.5"
+                style="fill:none;stroke:black;stroke-width:1.5" />
+                <polyline points="5,5 15,5 16,5.5 16.5,6.125 16,7 15,7.5 5,7.5 4,7 3.5,6.125 4,5.5 5,5 15,5"
+                style="fill:none;stroke:black;stroke-width:1.5" />
+                <polyline points="7.5,5 8.5625,3.0625  10,2.5 11.4375,3.0625 12.5,5"
+                style="fill:none;stroke:black;stroke-width:1.5" />
+            </svg>
+        </button>
+        <button class="editButton" @click="$emit('edit-todo-event', todo.id)">
             <svg height="20" width="20">
                 <polyline points="5,7.5 5,15 7.5,17.5 12.5,17.5 15,15 15,7.5"
                 style="fill:none;stroke:black;stroke-width:1.5" />
@@ -25,6 +37,62 @@
 <script>
 
     console.log("item exec")
+
+
+
+    // export default {
+    //     name: "TodoItem",
+    //     emits: ["deleteTodoEvent"], // <--- this is what the warning in hinting to
+
+    //     props: ["todo_prop"],
+    //     data() {
+    //         return {
+    //             todo: this.todo_prop,
+    //             key: this.key
+    //         }
+    //     },
+    //     methods: {
+    //         markCompleted() {
+    //             console.log(this.todo.completed)
+    //             this.todo.completed = !this.todo.completed
+    //             console.log(this.todo.completed)
+    //         },
+    //         deleteToDoItem(toDoId){
+    //             this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
+
+    //         },
+    //         editToDoItem(toDoId){
+    //             console.log("aldsfkjöadsfjöalskdjfölasdjfölasjkdfölkasjdföl")
+    //             console.log(typeof this.todoEntries)
+	// 			console.log(toDoId)
+    //             // console.log(this)
+    //             // // this.todoEntries.
+    //             // // this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
+    //             // for (const [key, value] of Object.entries(this)) {
+    //             //     console.log(`${key} | ${value}`); // "a 5", "b 7", "c 9"
+    //             //     console.log(this.todo_prop["title"])
+    //             //     console.log(this.todo_prop["id"])
+    //             //     // console.log(todo.id)
+    //             //     // this.todo_prop["title"] = "hallo";
+    //             //     // console.log(this.todo)
+    //             //     // this.todo = "hallo";
+
+    //             // }
+    //             // // console.log(this.key)
+    //             // // this.key = 123;
+    //             // // console.log(this.key)
+    //             // // document.getElementsByClassName('editInput')[whole_number].value
+    //         }
+    //     },
+    //     // eslint-disable-next-line no-unused-vars
+    //     setup(_,{ emit }) {
+    //         'delete-todo-event', key
+    //     },
+    // };
+
+
+
+
     export default {
         name: "TodoItem",
         props: ["todo_prop"],
@@ -41,7 +109,11 @@
             },
             deleteToDoItem(toDoId){
                 this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
-            }
+
+            },
+            editToDoItem(toDoId){
+				console.log(this.todoEntries[toDoId - 1].title)
+			}
         }
     }
     console.log("item end")
