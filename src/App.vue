@@ -1,8 +1,23 @@
 <template>
-        <h1>Meine To-Do-Liste</h1>
+        <h1  >Meine To-Do-Liste<button id="InformationsButton" @click="showInformations" style="margin-left:2.5em">i</button></h1>
+		<span id="Informationen"  @click="hideInformations">
+			<br>
+			Dies ist ein Forntend für den ÜK 294. <br>
+			Gemacht wurde dies von Fabio Kälin.
+
+			<br>
+			<br>
+			<b>Hinweise:</b>
+			<ul>
+
+				<li>Bitte bei Nutzung des Firefox-Browsers beachten das manche Dinge (z.B. Scrollbar) nicht richtig angezeigt werden.</li>
+			</ul>
+			<br>
+			<br>
+			</span>
 		<ToDos v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @change-Edit-Input="changeEditInput" @edit-todo-event="editToDoItem"/>
-		<br>
-        <AddToDoButton @add-todo-event="addToDoItem"/>
+		<br @click="hideInformations">
+        <AddToDoButton  @click="hideInformations" @add-todo-event="addToDoItem"/>
 
 </template>
 <script>
@@ -90,7 +105,21 @@
 					}
 				}
 
-            }
+            },
+			showInformations(){
+				console.log(document.getElementById("Informationen"))
+				let info = document.getElementById("Informationen")
+				if (info.style.display == "none") {
+					info.style.display = "unset";
+				} else if (info.style.display == "unset"){
+					info.style.display = "none";
+				} else {
+					info.style.display = "unset";
+				}
+			},
+			hideInformations() {
+				document.getElementById("Informationen").style.display = "none";
+			}
 		}
 	}
 
