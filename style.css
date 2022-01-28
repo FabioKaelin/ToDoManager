@@ -62,6 +62,7 @@ body > script {
     margin: 0;
     padding: 0;
     margin-left: 1rem;
+    float: right;
 }
 img, svg, video, canvas, audio, iframe, embed, object {
     display: block;
@@ -84,6 +85,40 @@ input[type="text"]
     font-family: 'Mochiy Pop P One', sans-serif;
 }
 
-.papierkorbButton{
+
+
+.editInput {
+    display: none;
+    /* float: right; */
+    align-items: center;
+    /* float:right; */
+    margin-left: 30px;
+
+}
+
+.showInputButton {
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+    background-color: transparent;
+    border-color: transparent;
+    margin: 0;
+    padding: 0;
+    margin-left: 1rem;
     float: right;
+}
+
+
+#app {
+    width: 90%;
+    /* text-align: center; */
+}
+
+.ToDoTrennlinie {
+    width:100%;
+    text-align:left;
+    /* margin-left:unset; */
+    size: "10";
+    color: black;
+    background-color: black;
 }
