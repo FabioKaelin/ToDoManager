@@ -1,6 +1,6 @@
 <template>
         <h1>Meine To-Do-Liste</h1>
-		<ToDos v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @edit-todo-event="editToDoItem"/>
+		<ToDos v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @change-Edit-Input="changeEditInput" @edit-todo-event="editToDoItem"/>
 		<br>
         <AddToDoButton @add-todo-event="addToDoItem"/>
 
@@ -39,15 +39,58 @@
 		methods: {
 			addToDoItem(newToDoItem) {
 				this.todoEntries = [...this.todoEntries, newToDoItem];
-				console.log(this.todoEntries)
 			},
 			deleteToDoItem(toDoId){
 				this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
 			},
 
             editToDoItem(toDoId){
-				console.log(this.todoEntries[toDoId - 1].title)
-			}
+				if(event.keyCode == 13) {
+					let id;
+					for (const element of this.todoEntries) {
+						if(toDoId == element.id){
+							id = element.id
+
+						}
+					}
+					var x = document.getElementsByClassName("editInput");
+					for (const element of x) {
+						if(id == element.parentElement.id){
+							let new_content = element.value
+							for (const fulltodo of this.todoEntries){
+								if (id == fulltodo.id){
+									fulltodo.title = new_content
+								}
+							}
+							element.value = ""
+						}
+					}
+					this.changeEditInput(toDoId)
+				}
+
+			},
+			changeEditInput(toDoId){
+                let id;
+				for (const element of this.todoEntries) {
+					if(toDoId == element.id){
+						id = element.id
+
+					}
+				}
+                var x = document.getElementsByClassName("editInput");
+				for (const element of x) {
+					if(id == element.parentElement.id){
+						if (element.style.display == "none") {
+							element.style.display = "unset";
+						} else if (element.style.display == "unset"){
+							element.style.display = "none";
+						} else {
+							element.style.display = "unset";
+						}
+					}
+				}
+
+            }
 		}
 	}
 
