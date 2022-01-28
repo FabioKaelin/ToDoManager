@@ -1,6 +1,6 @@
 <template>
         <h1>Meine To-Do-Liste</h1>
-		<ToDos v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem"/>
+		<ToDos v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @edit-todo-event="editToDoItem"/>
 		<br>
         <AddToDoButton @add-todo-event="addToDoItem"/>
 
@@ -33,19 +33,24 @@
 						title: 'Blog Beitrag schreiben',
 						completed: false
 					},
-					],
-				}
-			},
-			methods: {
-				addToDoItem(newToDoItem) {
-					this.todoEntries = [...this.todoEntries, newToDoItem];
-					console.log(this.todoEntries)
-				},
-				deleteToDoItem(toDoId){
-					this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
-				}
+				],
 			}
-    }
+		},
+		methods: {
+			addToDoItem(newToDoItem) {
+				this.todoEntries = [...this.todoEntries, newToDoItem];
+				console.log(this.todoEntries)
+			},
+			deleteToDoItem(toDoId){
+				this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
+			},
+
+            editToDoItem(toDoId){
+				console.log(this.todoEntries[toDoId - 1].title)
+			}
+		}
+	}
+
 	console.log("app end")
 </script>
 
