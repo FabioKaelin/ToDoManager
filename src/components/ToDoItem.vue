@@ -1,6 +1,6 @@
 <template>
     <div class="todoitem" v-bind:class="{'completed':this.todo.completed}">
-        <span @click="markCompleted"  class="Taskname">{{todo.title}}</span>
+        <span @click="markCompleted"  class="Taskname">{{todo.description}}</span>
         <!-- @blur="$emit('edit-todo-event', todo.id)" -->
         <input type="text"  @keydown="$emit('edit-todo-event', todo.id)" class="editInput">
         <!-- <input type="button" class="showInputButton" value="edit"  @click="$emit('change-Edit-Input', todo.id)"> -->
@@ -110,7 +110,7 @@
 
             },
             editToDoItem(toDoId){
-				console.log(this.todoEntries[toDoId - 1].title)
+				console.log(this.todoEntries[toDoId - 1].description)
 			},
             showEditInput(toDoId){
                 console.log("hallo")
