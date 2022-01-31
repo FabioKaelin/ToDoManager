@@ -27,7 +27,3 @@
     }
     console.log("todos end")
 </script>
-
-<style scoped>
-	@import "../../style.css"
-</style>
