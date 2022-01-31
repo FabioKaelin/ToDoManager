@@ -1,5 +1,5 @@
 <template>
-        <h1  >Meine To-Do-Liste<button id="InformationsButton" @click="showInformations" style="margin-left:2.5em">i</button></h1>
+        <h1  >Meine To-Do-Liste<button id="InformationsButton" @click="showInformations" style="margin-left:2.5em">i</button> <button @click="changeTheme">Theme</button> </h1>
 		<span id="Informationen"  @click="hideInformations">
 			<br>
 			Dies ist ein Forntend für den ÜK 294. <br>
@@ -119,6 +119,17 @@
 			},
 			hideInformations() {
 				document.getElementById("Informationen").style.display = "none";
+			},
+			changeTheme() {
+				console.log(document.scrollingElement.style)
+				if (document.body.style.color == "rgb(28, 82, 83)") {// if lighttheme then Darktheme
+					document.body.style.color = "rgb(58, 145, 148)";
+					document.body.style.backgroundColor = "rgb(16, 40, 66)"
+				} else if (document.body.style.color == "rgb(58, 145, 148)"){//if Darktheme then Lighttheme
+					document.body.style.color = "rgb(28, 82, 83)";
+					document.body.style.background = "rgb(127, 255, 212"
+
+				}
 			}
 		}
 	}
