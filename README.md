@@ -8,4 +8,4 @@ npm install
 npm run serve
 ```
 ## Nutzen
-Mann kann mit Hilfe meiner [ToDo-API](https://github.com/FabioKaelin/OpenAPI-ToDoManager) kann man das Frontend benutzen
+Mann kann mit Hilfe meines Backends ([ToDo-API](https://github.com/FabioKaelin/OpenAPI-ToDoManager)) kann man das Frontend benutzen
