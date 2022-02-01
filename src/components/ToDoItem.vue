@@ -38,61 +38,6 @@
 
     console.log("item exec")
 
-
-
-    // export default {
-    //     name: "TodoItem",
-    //     emits: ["deleteTodoEvent"], // <--- this is what the warning in hinting to
-
-    //     props: ["todo_prop"],
-    //     data() {
-    //         return {
-    //             todo: this.todo_prop,
-    //             key: this.key
-    //         }
-    //     },
-    //     methods: {
-    //         markCompleted() {
-    //             console.log(this.todo.completed)
-    //             this.todo.completed = !this.todo.completed
-    //             console.log(this.todo.completed)
-    //         },
-    //         deleteToDoItem(toDoId){
-    //             this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
-
-    //         },
-    //         editToDoItem(toDoId){
-    //             console.log("aldsfkjöadsfjöalskdjfölasdjfölasjkdfölkasjdföl")
-    //             console.log(typeof this.todoEntries)
-	// 			console.log(toDoId)
-    //             // console.log(this)
-    //             // // this.todoEntries.
-    //             // // this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
-    //             // for (const [key, value] of Object.entries(this)) {
-    //             //     console.log(`${key} | ${value}`); // "a 5", "b 7", "c 9"
-    //             //     console.log(this.todo_prop["title"])
-    //             //     console.log(this.todo_prop["id"])
-    //             //     // console.log(todo.id)
-    //             //     // this.todo_prop["title"] = "hallo";
-    //             //     // console.log(this.todo)
-    //             //     // this.todo = "hallo";
-
-    //             // }
-    //             // // console.log(this.key)
-    //             // // this.key = 123;
-    //             // // console.log(this.key)
-    //             // // document.getElementsByClassName('editInput')[whole_number].value
-    //         }
-    //     },
-    //     // eslint-disable-next-line no-unused-vars
-    //     setup(_,{ emit }) {
-    //         'delete-todo-event', key
-    //     },
-    // };
-
-
-
-
     export default {
         name: "TodoItem",
         props: ["todo_prop"],
