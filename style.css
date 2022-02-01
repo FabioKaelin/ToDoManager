@@ -92,6 +92,10 @@ body > *  {
     display: none;
 }
 
+.DuringRegisterHide {
+    display: none;
+}
+
 #authenticateContent {
     display:block;
 }
