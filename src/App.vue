@@ -6,7 +6,7 @@
 		<div class="DuringRegisterHide" id="authenticateContent">
 			Email<input  id="emailInput" type="text">
 			<br>
-			Password<input  id="passwordInput" type="password">
+			Password<input @keydown="authenticateInput" id="passwordInput"  type="password">
 			<br>
 			<button @click="authenticate">Login</button>
 			<!-- <button  @click="tasks" >Tasks</button> -->
@@ -41,7 +41,7 @@
 			<br>
 			<br>
 			</span>
-		<ToDos class="DuringAuthHide DuringRegisterHide" v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @change-Edit-Input="changeEditInput" @edit-todo-event="editToDoItem"/>
+		<ToDos id="ToDos" class="DuringAuthHide DuringRegisterHide" v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @change-Edit-Input="changeEditInput" @edit-todo-event="updateToDoItem"/>
 		<br class="DuringAuthHide DuringRegisterHide" @click="hideInformations">
 
 </template>
@@ -49,6 +49,8 @@
 	console.log("app exec")
 	import ToDos from './components/ToDos'
 	import AddToDoButton from './components/AddToDoButton'
+
+
 
 	// if (document.body.classList == "authenticated"){
 	// 	console.log("asdf")
@@ -144,9 +146,10 @@
 				} else {
 					window.alert("Fehlgeschlagen bitte von neuem Beginnen")
 				}
-			},addToDoItem(newToDoItem) {
+			},/*addToDoItem(newToDoItem) {
 				this.todoEntries = [...this.todoEntries, newToDoItem];
-			},deleteToDoItem(toDoId){
+			},*/
+			deleteToDoItem2(toDoId){
 				this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
 			},editToDoItem(toDoId){
 				if(event.keyCode == 13) {
@@ -173,6 +176,7 @@
 				}
 
 			},async tasks(){
+				console.log("Tasks Started")
 				// let email = data.email;
 				document.getElementById("authenticateContent").style.display = "none"
 				document.getElementById("registerContent").style.display = "none"
@@ -192,10 +196,6 @@
 
 				const response = await fetch(url, {
 					method: 'GET',
-					// body: JSON.stringify({
-					// 	"email":"hugo@m295.local.zli.ch",
-					// 	"password":"Zli123"
-					// }),
 					headers: {
 						'authorization': `Bearer ${token}`,
 						'Content-Type': 'application/json'
@@ -203,27 +203,72 @@
 					uid: id
 				})
 				const json = await response.json()
-				// console.log(json)
-				// console.log(json.data.token)
-
-				// function jsonInToDoEntries(item, index, arr) {
-				// 	let object = new Object();
-				// 	console.log(item)
-				// 	object.description = item.description
-				// 	object.id = item.id
-				// 	this.todoEntries.push(object)
-				// 	console.log(index, arr)
-				// }
+				console.log(json)
 				this.todoEntries = []
-				// json.data.forEach(jsonInToDoEntries(this))
 				for (const item of json.data){
 					let object = new Object();
 					object.description = item.description
 					object.id = item.id
 					this.todoEntries.push(object)
+					console.log(object)
 				}
-				// let token = json.data.token
-				// return token;
+				let save = this.todoEntries
+				this.todoEntries = []
+				this.todoEntries = save
+				console.log(this.todoEntries)
+				console.log("Tasks end")
+			},async fetchUpdate(){
+				console.log("Tasks Started")
+				// let email = data.email;
+				document.getElementById("authenticateContent").style.display = "none"
+				document.getElementById("registerContent").style.display = "none"
+				document.getElementById("loading").style.display = "none"
+				var x = document.getElementsByClassName("DuringAuthHide");
+				var y = document.getElementsByClassName("DuringRegisterHide");
+				for (const element1 of x) {
+					for (const element2 of y) {
+						if (element2 == element1)
+						element1.style.display = "block"
+					}
+				}
+				let id = user.id;
+				let token = user.token
+				// console.log("tasks");
+				const url = "http://localhost:4312/v1/tasks"
+
+				const response = await fetch(url, {
+					method: 'GET',
+					headers: {
+						'authorization': `Bearer ${token}`,
+						'Content-Type': 'application/json'
+					},
+					uid: id
+				})
+				const json = await response.json()
+				console.log(json)
+				x = document.getElementsByClassName("todoitem");
+
+				for (const task of json.data){
+					for (const element of x) {
+						console.log(element.id)
+						console.log(task.id)
+						if(element.id == task.id){
+							for (const titleelement of document.getElementsByClassName("Taskname")){
+								console.log(task.description)
+								console.log(titleelement.innerText)
+								if (titleelement.parentNode.id == task.id){
+									console.log("change_____________________________________-")
+									titleelement.innerText = task.description
+								}
+							}
+						}
+					}
+				}
+
+
+
+
+				console.log(this.todoEntries)
 				console.log("Tasks end")
 			},async verify(email, password){
 				const url = "http://localhost:4312/v1/authenticate"
@@ -241,12 +286,80 @@
 				user = json.data
 
 				this.tasks()
+			},async addToDoItem(newToDoItem){
+				let token = user.token
+				const url = "http://localhost:4312/v1/tasks"
+				const response = await fetch(url, {
+					method: 'POST',
+					body: JSON.stringify({
+						"email":user.email,
+						"description": newToDoItem.title
+					}),
+					headers: {
+						'authorization': `Bearer ${token}`,
+						'Content-Type': 'application/json'
+					}
+				})
+				const json = await response.json()
+				console.log(json)
 
+				this.tasks()
+			},async updateToDoItem(toDoId){
+				if(event.keyCode == 13) {
+					var x = document.getElementsByClassName("editInput");
+					let new_content
+
+					for (const element of x) {
+						if(toDoId == element.parentElement.id){
+							new_content = element.value
+							element.value = ""
+						}
+					}
+					this.changeEditInput(toDoId)
+					let token = user.token
+					const url = `http://localhost:4312/v1/tasks/${toDoId}`
+					const response = await fetch(url, {
+						method: 'POST',
+						body: JSON.stringify({
+							"email":user.email,
+							"description": new_content
+						}),
+						headers: {
+							'authorization': `Bearer ${token}`,
+							'Content-Type': 'application/json'
+						}
+					})
+					const json = await response.json()
+					console.log(json)
+					this.fetchUpdate()
+				}
+			},async deleteToDoItem(toDoId){
+				let token = user.token
+				const url = `http://localhost:4312/v1/tasks/${toDoId}`
+				const response = await fetch(url, {
+					method: 'DELETE',
+					body: JSON.stringify({
+						"email":user.email,
+					}),
+					headers: {
+						'authorization': `Bearer ${token}`,
+						'Content-Type': 'application/json'
+					}
+				})
+				const json = await response.json()
+				console.log(json)
+
+				this.tasks()
 			},async authenticate() {
 				var email = document.getElementById("emailInput").value;
 				var password = document.getElementById("passwordInput").value;
 				this.verify(email, password)
-
+			},async authenticateInput() {
+				if(event.keyCode == 13){
+					var email = document.getElementById("emailInput").value;
+					var password = document.getElementById("passwordInput").value;
+					this.verify(email, password)
+				}
 			},changeEditInput(toDoId){
                 let id;
 				for (const element of this.todoEntries) {
@@ -296,6 +409,7 @@
 	// document.getElementById("authenticateContent").style.display = "display"
 
 	console.log("app end")
+
 </script>
 
 
