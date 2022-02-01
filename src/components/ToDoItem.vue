@@ -1,13 +1,7 @@
 <template>
     <div class="todoitem" >
-        <!-- v-bind:class="{'completed':this.todo.completed}" -->
         <span   class="Taskname">{{todo.description}}</span>
-        <!-- @click="markCompleted" -->
-        <!-- @blur="$emit('edit-todo-event', todo.id)" -->
         <input type="text"  @keydown="$emit('edit-todo-event', todo.id)" class="editInput">
-        <!-- <input type="button" class="showInputButton" value="edit"  @click="$emit('change-Edit-Input', todo.id)"> -->
-        <!-- @blur="editToDoItem" -->
-
         <button class="showInputButton" @click="$emit('change-Edit-Input', todo.id)">
             <svg height="20" width="20">
                 <polyline points="2.8,14.4 14.8,1.6 14.88,2 15,2.2 15.6,2.4 15.8,2.4 3.8,15.6 2.2,16.2 2.86,14.44 3.8,15.6"
@@ -47,11 +41,6 @@
             }
         },
         methods: {
-            // markCompleted() {
-            //     console.log(this.todo.completed)
-            //     this.todo.completed = !this.todo.completed
-            //     console.log(this.todo.completed)
-            // },
             deleteToDoItem(toDoId){
                 this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
 
