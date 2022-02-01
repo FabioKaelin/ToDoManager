@@ -4,9 +4,9 @@
         <AddToDoButton class="DuringAuthHide DuringRegisterHide"  @click="hideInformations" @add-todo-event="addToDoItem"/>
 		<br class="DuringRegisterHide DuringAuthHide"><br>
 		<div class="DuringRegisterHide" id="authenticateContent">
-			Email<input  id="emailInput" type="text">
+			Email: &emsp; &emsp; &emsp;<input  id="emailInput" type="email">
 			<br>
-			Password<input @keydown="authenticateInput" id="passwordInput"  type="password">
+			Password: &emsp;<input @keydown="authenticateInput" id="passwordInput"  type="password">
 			<br>
 			<button @click="authenticate">Login</button>
 			<!-- <button  @click="tasks" >Tasks</button> -->
@@ -14,7 +14,7 @@
 			<button @click="showRegister">register</button>
 		</div>
 		<div class="DuringAuthHide" id="registerContent">
-			Email: &emsp; &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; <input  id="RegisterEmail" type="text">
+			Email: &emsp; &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; <input  id="RegisterEmail" type="email">
 			<br>
 			Password: &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;<input  id="RegisterPassword" type="password">
 			<br>
@@ -46,14 +46,12 @@
 
 </template>
 <script>
-	console.log("app exec")
 	import ToDos from './components/ToDos'
 	import AddToDoButton from './components/AddToDoButton'
 
 
 
 	// if (document.body.classList == "authenticated"){
-	// 	console.log("asdf")
 	// 	document.body.getElementById("notauthenticate").style.display = "none"
 	// }
 	document.body.classList.add("unauthenticated")
@@ -95,8 +93,6 @@
 				document.getElementById("registerContent").style.display = "none"
 				document.getElementById("authenticateContent").style.display = "block"
 			},Checkpw(pwd, pwdbest){
-				console.log(pwd)
-				console.log(pwdbest)
 				if (pwd == pwdbest){
 					// window.location.replace("./index.html");
 					// window.alert("Index")
@@ -114,9 +110,8 @@
 				if (this.Checkpw(registerPassword.value, registerPasswordBestatigen.value)){
 					document.getElementById("loading").style.display = "block"
 					let url = "http://localhost:4312/v1/register"
-					console.log(registerEmail.value)
 					let email = await registerEmail.value
-					let response = await fetch(url, {
+					const response = await fetch(url, {
 						method: 'POST',
 						body: JSON.stringify({
 							"email":email,	//"hugo@m295.local.zli.ch"		hugo@m295.local.zli.ch
@@ -126,7 +121,6 @@
 							'Content-Type': 'application/json'
 						}
 					})
-					console.log(response)
 
 					// url = "http://localhost:4312/v1/authenticate"
 					// response = await fetch(url, {
@@ -139,44 +133,22 @@
 					// 		'Content-Type': 'application/json'
 					// 	}
 					// })
-					// let json = await response.json()
-					// user = json.data
-					this.verify(registerEmail.value, registerPassword.value)
-					this.tasks()
+					let json = await response.json()
+					//user = json.data
+					if (json.code == 200) {
+						await this.verify(registerEmail.value, registerPassword.value)
+					} else {
+
+						window.alert("Uiuiui etwas ist da aber schiefgelaufen")
+					}
+
 				} else {
-					window.alert("Fehlgeschlagen bitte von neuem Beginnen")
+					window.alert("Uiuiui etwas ist da aber schiefgelaufen")
 				}
 			},/*addToDoItem(newToDoItem) {
 				this.todoEntries = [...this.todoEntries, newToDoItem];
 			},*/
-			deleteToDoItem2(toDoId){
-				this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
-			},editToDoItem(toDoId){
-				if(event.keyCode == 13) {
-					let id;
-					for (const element of this.todoEntries) {
-						if(toDoId == element.id){
-							id = element.id
-
-						}
-					}
-					var x = document.getElementsByClassName("editInput");
-					for (const element of x) {
-						if(id == element.parentElement.id){
-							let new_content = element.value
-							for (const fulltodo of this.todoEntries){
-								if (id == fulltodo.id){
-									fulltodo.description = new_content
-								}
-							}
-							element.value = ""
-						}
-					}
-					this.changeEditInput(toDoId)
-				}
-
-			},async tasks(){
-				console.log("Tasks Started")
+			async tasks(){
 				// let email = data.email;
 				document.getElementById("authenticateContent").style.display = "none"
 				document.getElementById("registerContent").style.display = "none"
@@ -191,7 +163,6 @@
 				}
 				let id = user.id;
 				let token = user.token
-				// console.log("tasks");
 				const url = "http://localhost:4312/v1/tasks"
 
 				const response = await fetch(url, {
@@ -203,22 +174,14 @@
 					uid: id
 				})
 				const json = await response.json()
-				console.log(json)
 				this.todoEntries = []
 				for (const item of json.data){
 					let object = new Object();
 					object.description = item.description
 					object.id = item.id
 					this.todoEntries.push(object)
-					console.log(object)
 				}
-				let save = this.todoEntries
-				this.todoEntries = []
-				this.todoEntries = save
-				console.log(this.todoEntries)
-				console.log("Tasks end")
 			},async fetchUpdate(){
-				console.log("Tasks Started")
 				// let email = data.email;
 				document.getElementById("authenticateContent").style.display = "none"
 				document.getElementById("registerContent").style.display = "none"
@@ -233,7 +196,6 @@
 				}
 				let id = user.id;
 				let token = user.token
-				// console.log("tasks");
 				const url = "http://localhost:4312/v1/tasks"
 
 				const response = await fetch(url, {
@@ -245,31 +207,19 @@
 					uid: id
 				})
 				const json = await response.json()
-				console.log(json)
 				x = document.getElementsByClassName("todoitem");
 
 				for (const task of json.data){
 					for (const element of x) {
-						console.log(element.id)
-						console.log(task.id)
 						if(element.id == task.id){
 							for (const titleelement of document.getElementsByClassName("Taskname")){
-								console.log(task.description)
-								console.log(titleelement.innerText)
 								if (titleelement.parentNode.id == task.id){
-									console.log("change_____________________________________-")
 									titleelement.innerText = task.description
 								}
 							}
 						}
 					}
 				}
-
-
-
-
-				console.log(this.todoEntries)
-				console.log("Tasks end")
 			},async verify(email, password){
 				const url = "http://localhost:4312/v1/authenticate"
 				const response = await fetch(url, {
@@ -283,9 +233,12 @@
 					}
 				})
 				const json = await response.json()
-				user = json.data
-
-				this.tasks()
+				if (json.code == 200) {
+					user = json.data
+					this.tasks()
+				} else {
+					window.alert("Uiuiui etwas ist da aber schiefgelaufen")
+				}
 			},async addToDoItem(newToDoItem){
 				let token = user.token
 				const url = "http://localhost:4312/v1/tasks"
@@ -301,9 +254,13 @@
 					}
 				})
 				const json = await response.json()
-				console.log(json)
+				if (json.code == 200){
+					window.alert("Erfolgreich hinzugefügt")
+					this.tasks()
+				} else {
+					window.alert("Uiuiui etwas ist da aber schiefgelaufen")
+				}
 
-				this.tasks()
 			},async updateToDoItem(toDoId){
 				if(event.keyCode == 13) {
 					var x = document.getElementsByClassName("editInput");
@@ -330,8 +287,12 @@
 						}
 					})
 					const json = await response.json()
-					console.log(json)
-					this.fetchUpdate()
+					if (json.code == 200){
+						window.alert("Erfolgreich geupdatet")
+						this.fetchUpdate()
+					} else {
+						window.alert("Uiuiui etwas ist da aber schiefgelaufen")
+					}
 				}
 			},async deleteToDoItem(toDoId){
 				let token = user.token
@@ -347,9 +308,12 @@
 					}
 				})
 				const json = await response.json()
-				console.log(json)
-
-				this.tasks()
+				if (json.code == 200){
+					window.alert("Erfolgreich gelöscht")
+					this.tasks()
+				} else {
+					window.alert("Uiuiui etwas ist da aber schiefgelaufen")
+				}
 			},async authenticate() {
 				var email = document.getElementById("emailInput").value;
 				var password = document.getElementById("passwordInput").value;
@@ -393,7 +357,6 @@
 			},hideInformations() {
 				document.getElementById("Informationen").style.display = "none";
 			},changeTheme() {
-				console.log(document.scrollingElement.style)
 				if (document.body.style.color == "rgb(28, 82, 83)") {// if lighttheme then Darktheme
 					document.body.style.color = "rgb(58, 145, 148)";
 					document.body.style.backgroundColor = "rgb(16, 40, 66)"
@@ -408,7 +371,6 @@
 
 	// document.getElementById("authenticateContent").style.display = "display"
 
-	console.log("app end")
 
 </script>
 
