@@ -1,17 +1,30 @@
 <template>
-        <h1 class="DuringAuthHide">Meine To-Do-Liste<button id="InformationsButton" @click="showInformations" style="margin-left:2.5em">i</button></h1>
+        <h1 class="DuringAuthHide DuringRegisterHide">Meine To-Do-Liste<button id="InformationsButton" @click="showInformations" style="margin-left:2.5em">i</button></h1>
 		<!-- <button @click="changeTheme">Theme</button> -->
-        <AddToDoButton class="DuringAuthHide"  @click="hideInformations" @add-todo-event="addToDoItem"/>
-		<br><br>
-		<div id="authenticateContent">
+        <AddToDoButton class="DuringAuthHide DuringRegisterHide"  @click="hideInformations" @add-todo-event="addToDoItem"/>
+		<br class="DuringRegisterHide DuringAuthHide"><br>
+		<div class="DuringRegisterHide" id="authenticateContent">
 			Email<input  id="emailInput" type="text">
 			<br>
 			Password<input  id="passwordInput" type="password">
 			<br>
-			<button @click="authenticate">authenticate</button>
-			<button @click="register">register</button>
+			<button @click="authenticate">Login</button>
 			<!-- <button  @click="tasks" >Tasks</button> -->
+
+			<button @click="showRegister">register</button>
 		</div>
+		<div class="DuringAuthHide" id="registerContent">
+			Email: &emsp; &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; <input  id="RegisterEmail" type="text">
+			<br>
+			Password: &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;<input  id="RegisterPassword" type="password">
+			<br>
+			Password bestätigen: &emsp;&emsp; &emsp;<input  id="RegisterPasswordBestatigen" type="password">
+			<br>
+			&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;<button @click="register">register</button>
+
+			<button @click="showAuthenticate">Login</button>
+		</div>
+		<span style="display: none" id="loading">Loading...</span>
 		<span id="Informationen"  @click="hideInformations">
 			<br>
 			Dies ist ein Forntend für den ÜK 294. <br>
@@ -28,8 +41,8 @@
 			<br>
 			<br>
 			</span>
-		<ToDos class="DuringAuthHide" v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @change-Edit-Input="changeEditInput" @edit-todo-event="editToDoItem"/>
-		<br class="DuringAuthHide" @click="hideInformations">
+		<ToDos class="DuringAuthHide DuringRegisterHide" v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @change-Edit-Input="changeEditInput" @edit-todo-event="editToDoItem"/>
+		<br class="DuringAuthHide DuringRegisterHide" @click="hideInformations">
 
 </template>
 <script>
@@ -73,7 +86,65 @@
 			}
 		},
 		methods: {
-			addToDoItem(newToDoItem) {
+			showRegister() {
+				document.getElementById("registerContent").style.display = "block"
+				document.getElementById("authenticateContent").style.display = "none"
+			},showAuthenticate(){
+				document.getElementById("registerContent").style.display = "none"
+				document.getElementById("authenticateContent").style.display = "block"
+			},Checkpw(pwd, pwdbest){
+				console.log(pwd)
+				console.log(pwdbest)
+				if (pwd == pwdbest){
+					// window.location.replace("./index.html");
+					// window.alert("Index")
+					return true
+				} else {
+					// window.location.replace("./anmeldungFehlgeschlagen.html");
+					window.alert("Fehlgeschlagen")
+					return false
+				}
+				// window.alert("Hallo")
+			},async register(){
+				var registerEmail = document.getElementById("RegisterEmail");
+				var registerPassword = document.getElementById("RegisterPassword");
+				var registerPasswordBestatigen = document.getElementById("RegisterPasswordBestatigen");
+				if (this.Checkpw(registerPassword.value, registerPasswordBestatigen.value)){
+					document.getElementById("loading").style.display = "block"
+					let url = "http://localhost:4312/v1/register"
+					console.log(registerEmail.value)
+					let email = await registerEmail.value
+					let response = await fetch(url, {
+						method: 'POST',
+						body: JSON.stringify({
+							"email":email,	//"hugo@m295.local.zli.ch"		hugo@m295.local.zli.ch
+							"password":registerPassword.value	//"Zli123"
+						}),
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					})
+					console.log(response)
+
+					// url = "http://localhost:4312/v1/authenticate"
+					// response = await fetch(url, {
+					// 	method: 'POST',
+					// 	body: JSON.stringify({
+					// 		"email":registerEmail.value,	//"hugo@m295.local.zli.ch"		hugo@m295.local.zli.ch
+					// 		"password":registerPassword.value	//"Zli123"
+					// 	}),
+					// 	headers: {
+					// 		'Content-Type': 'application/json'
+					// 	}
+					// })
+					// let json = await response.json()
+					// user = json.data
+					this.verify(registerEmail.value, registerPassword.value)
+					this.tasks()
+				} else {
+					window.alert("Fehlgeschlagen bitte von neuem Beginnen")
+				}
+			},addToDoItem(newToDoItem) {
 				this.todoEntries = [...this.todoEntries, newToDoItem];
 			},deleteToDoItem(toDoId){
 				this.todoEntries = this.todoEntries.filter(item => item.id !== toDoId)
@@ -103,10 +174,21 @@
 
 			},async tasks(){
 				// let email = data.email;
+				document.getElementById("authenticateContent").style.display = "none"
+				document.getElementById("registerContent").style.display = "none"
+				document.getElementById("loading").style.display = "none"
+				var x = document.getElementsByClassName("DuringAuthHide");
+				var y = document.getElementsByClassName("DuringRegisterHide");
+				for (const element1 of x) {
+					for (const element2 of y) {
+						if (element2 == element1)
+						element1.style.display = "block"
+					}
+				}
 				let id = user.id;
 				let token = user.token
 				// console.log("tasks");
-				const url = "http://localhost:3000/v1/tasks"
+				const url = "http://localhost:4312/v1/tasks"
 
 				const response = await fetch(url, {
 					method: 'GET',
@@ -143,39 +225,28 @@
 				// let token = json.data.token
 				// return token;
 				console.log("Tasks end")
-			},async authenticate() {
-
-				var emailInput = document.getElementById("emailInput");
-
-				var passwordInput = document.getElementById("passwordInput");
-
-
-				const url = "http://localhost:3000/v1/authenticate"
-
+			},async verify(email, password){
+				const url = "http://localhost:4312/v1/authenticate"
 				const response = await fetch(url, {
 					method: 'POST',
 					body: JSON.stringify({
-						"email":emailInput.value,	//"hugo@m295.local.zli.ch"		hugo@m295.local.zli.ch
-						"password":passwordInput.value	//"Zli123"
+						"email":email,	//"hugo@m295.local.zli.ch"		hugo@m295.local.zli.ch
+						"password":password	//"Zli123"
 					}),
 					headers: {
 						'Content-Type': 'application/json'
 					}
 				})
 				const json = await response.json()
-				// console.log(json)
-				// let token = json.data.token
 				user = json.data
-				// class="DuringAuthHide"
-				document.getElementById("authenticateContent").style.display = "none"
-				var x = document.getElementsByClassName("DuringAuthHide");
-				for (const element of x) {
-					element.style.display = "block"
-				}
-
 
 				this.tasks()
-				// return json.data;
+
+			},async authenticate() {
+				var email = document.getElementById("emailInput").value;
+				var password = document.getElementById("passwordInput").value;
+				this.verify(email, password)
+
 			},changeEditInput(toDoId){
                 let id;
 				for (const element of this.todoEntries) {
