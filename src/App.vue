@@ -8,10 +8,11 @@
 			<br>
 			Password: &emsp;<input @keydown="authenticateInput" id="passwordInput"  type="password">
 			<br>
-			<button @click="authenticate">Login</button>
-			<!-- <button  @click="tasks" >Tasks</button> -->
 
-			<button @click="showRegister">register</button>
+			&emsp; &emsp; &emsp;  &emsp; &emsp;
+			<button id="LoginLogin" class="DefaultButton" @click="authenticate">Login</button>
+
+			<button id="LoginRegister" class="DefaultButton" @click="showRegister">register</button>
 		</div>
 		<div class="DuringAuthHide" id="registerContent">
 			Email: &emsp; &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; <input  id="RegisterEmail" type="email">
@@ -20,9 +21,10 @@
 			<br>
 			Password bestätigen: &emsp;&emsp; &emsp;<input  id="RegisterPasswordBestatigen" type="password">
 			<br>
-			&emsp; &emsp; &emsp; &emsp; &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;<button @click="register">register</button>
+			&emsp; &emsp; &emsp;  &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+			<button id="RegisterRegister" class="DefaultButton" @click="register">register</button>
 
-			<button @click="showAuthenticate">Login</button>
+			<button id="RegisterLogin" class="DefaultButton" @click="showAuthenticate">Login</button>
 		</div>
 		<span style="display: none" id="loading">Loading...</span>
 		<span id="Informationen"  @click="hideInformations">
@@ -43,6 +45,7 @@
 			</span>
 		<ToDos id="ToDos" class="DuringAuthHide DuringRegisterHide" v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @change-Edit-Input="changeEditInput" @edit-todo-event="updateToDoItem"/>
 		<br class="DuringAuthHide DuringRegisterHide" @click="hideInformations">
+		<button class="DefaultButton" id="AdminButton">Admin</button>
 
 </template>
 <script>
