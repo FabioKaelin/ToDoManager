@@ -97,15 +97,10 @@
 				document.getElementById("authenticateContent").style.display = "block"
 			},Checkpw(pwd, pwdbest){
 				if (pwd == pwdbest){
-					// window.location.replace("./index.html");
-					// window.alert("Index")
 					return true
 				} else {
-					// window.location.replace("./anmeldungFehlgeschlagen.html");
-					window.alert("Fehlgeschlagen")
 					return false
 				}
-				// window.alert("Hallo")
 			},async register(){
 				var registerEmail = document.getElementById("RegisterEmail");
 				var registerPassword = document.getElementById("RegisterPassword");
@@ -258,7 +253,6 @@
 				})
 				const json = await response.json()
 				if (json.code == 200){
-					window.alert("Erfolgreich hinzugefügt")
 					this.tasks()
 				} else {
 					window.alert("Uiuiui etwas ist da aber schiefgelaufen")
@@ -291,7 +285,6 @@
 					})
 					const json = await response.json()
 					if (json.code == 200){
-						window.alert("Erfolgreich geupdatet")
 						this.fetchUpdate()
 					} else {
 						window.alert("Uiuiui etwas ist da aber schiefgelaufen")
@@ -312,7 +305,6 @@
 				})
 				const json = await response.json()
 				if (json.code == 200){
-					window.alert("Erfolgreich gelöscht")
 					this.tasks()
 				} else {
 					window.alert("Uiuiui etwas ist da aber schiefgelaufen")
