@@ -1,12 +1,14 @@
 <template>
-        <h1 class="DuringAuthHide DuringRegisterHide">Meine To-Do-Liste<button id="InformationsButton" @click="showInformations" style="margin-left:2.5em">i</button></h1>
+		<br>
+        <h1 class="Content DuringAuthHide DuringRegisterHide">Meine To-Do-Liste<button id="InformationsButton" @click="showInformations" style="margin-left:2.5em">i</button></h1>
 		<!-- <button @click="changeTheme">Theme</button> -->
-        <AddToDoButton class="DuringAuthHide DuringRegisterHide"  @click="hideInformations" @add-todo-event="addToDoItem"/>
-		<br class="DuringRegisterHide DuringAuthHide"><br>
-		<div class="DuringRegisterHide" id="authenticateContent">
-			Email: &emsp; &emsp; &emsp;<input  id="emailInput" type="email">
+        <AddToDoButton class="Content DuringAuthHide DuringRegisterHide"  @click="hideInformations" @add-todo-event="addToDoItem"/>
+		<br class="Content DuringRegisterHide DuringAuthHide"><br>
+		<button @click="logout" id="Logout" class="Content DefaultButton DuringRegisterHide DuringAuthHide">Logout</button>
+		<div class="Content DuringRegisterHide" id="authenticateContent">
+			Email: &emsp; &emsp; &emsp;<input v-model="LoginUsername"  id="emailInput" type="email">
 			<br>
-			Password: &emsp;<input @keydown="authenticateInput" id="passwordInput"  type="password">
+			Password: &emsp;<input v-model="LoginPassword" @keydown="authenticateInput" id="passwordInput"  type="password">
 			<br>
 
 			&emsp; &emsp; &emsp;  &emsp; &emsp;
@@ -14,23 +16,23 @@
 
 			<button id="LoginRegister" class="DefaultButton" @click="showRegister">register</button>
 		</div>
-		<div class="DuringAuthHide" id="registerContent">
-			Email: &emsp; &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; <input  id="RegisterEmail" type="email">
+		<div class="Content DuringAuthHide" id="registerContent">
+			Email: &emsp; &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; <input v-model="RegisterUsername" id="RegisterEmail" type="email">
 			<br>
-			Password: &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;<input  id="RegisterPassword" type="password">
+			Password: &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;<input v-model="RegisterPassword" id="RegisterPassword" type="password">
 			<br>
-			Password bestätigen: &emsp;&emsp; &emsp;<input  id="RegisterPasswordBestatigen" type="password">
+			Password bestätigen: &emsp;&emsp; &emsp;<input v-model="RegisterPasswordBest" id="RegisterPasswordBestatigen" type="password">
 			<br>
 			&emsp; &emsp; &emsp;  &emsp; &emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
 			<button id="RegisterRegister" class="DefaultButton" @click="register">register</button>
 
 			<button id="RegisterLogin" class="DefaultButton" @click="showAuthenticate">Login</button>
 		</div>
-		<span style="display: none" id="loading">Loading...</span>
-		<span id="Informationen"  @click="hideInformations">
+		<span class="Content DuringTaskHide DuringAuthHide DuringRegisterHide" style="display: none" id="loading">Loading...</span>
+		<span class="Content DuringTaskHide DuringAuthHide DuringRegisterHide" id="Informationen"  @click="hideInformations">
 			<br>
 			Dies ist ein Frontend für den ÜK 294. <br>
-			Gemacht wurde dies von Fabio Kälin.
+			Gemacht wurde dies von  Fabio Kälin.
 
 			<br>
 			<br>
@@ -42,11 +44,15 @@
 			</ul>
 			<br>
 			<br>
-			</span>
-		<ToDos id="ToDos" class="DuringAuthHide DuringRegisterHide" v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @change-Edit-Input="changeEditInput" @edit-todo-event="updateToDoItem"/>
-		<br class="DuringAuthHide DuringRegisterHide" @click="hideInformations">
-		<button class="DefaultButton" id="AdminButton">Admin</button>
+		</span>
+		<ToDos id="ToDos" class="Content DuringAuthHide DuringRegisterHide" v-bind:todoEntries="todoEntries" @delete-todo-event="deleteToDoItem" @change-Edit-Input="changeEditInput" @edit-todo-event="updateToDoItem"/>
+		<br class="Content DuringAuthHide DuringRegisterHide" @click="hideInformations">
 
+		<div class="Content DuringAuthHide DuringRegisterHide" id="AdminContent">
+			<button @click="admin" class="DefaultButton" id="AdminButton">Admin</button>
+			<input  v-model="sqlInput" id="sqlInput" type="text">
+			<pre id="AdminOutput" >{{ this.adminOutput }}</pre>
+		</div>
 </template>
 <script>
 	import ToDos from './components/ToDos'
@@ -59,7 +65,7 @@
 	// }
 	document.body.classList.add("unauthenticated")
 
-	let user = undefined;
+	// let user = undefined;
 
     export default {
 		name: 'App',
@@ -86,10 +92,34 @@
 						// completed: false
 					},
 				],
+				adminOutput: "",
+				LoginUsername: "",
+				LoginPassword: "",
+				RegisterUsername: "",
+				RegisterPassword: "",
+				RegisterPasswordBest: "",
+				sqlInput: "",
+				user: undefined
 			}
 		},
 		methods: {
-			showRegister() {
+			async admin(){
+				const url = "http://localhost:4312/v1/admin"
+				const response = await fetch(url, {
+					method: 'POST',
+					body: JSON.stringify({
+						"email": this.username,
+						"password": this.password,
+						"SQL": this.sqlInput
+					}),
+					headers: {
+						// 'authorization': `Bearer ${token}`,
+						'Content-Type': 'application/json'
+					},
+				})
+				const json = await response.json()
+				this.adminOutput = JSON.stringify(json, null, 2)
+			},showRegister() {
 				document.getElementById("registerContent").style.display = "block"
 				document.getElementById("authenticateContent").style.display = "none"
 			},showAuthenticate(){
@@ -102,18 +132,17 @@
 					return false
 				}
 			},async register(){
-				var registerEmail = document.getElementById("RegisterEmail");
-				var registerPassword = document.getElementById("RegisterPassword");
-				var registerPasswordBestatigen = document.getElementById("RegisterPasswordBestatigen");
-				if (this.Checkpw(registerPassword.value, registerPasswordBestatigen.value)){
+				var registerEmail = this.RegisterEmail;
+				var registerPassword = this.RegisterPassword;
+				var registerPasswordBestatigen = this.RegisterPasswordBest;
+				if (this.Checkpw(registerPassword, registerPasswordBestatigen)){
 					document.getElementById("loading").style.display = "block"
 					let url = "http://localhost:4312/v1/register"
-					let email = await registerEmail.value
 					const response = await fetch(url, {
 						method: 'POST',
 						body: JSON.stringify({
-							"email":email,	//"hugo@m295.local.zli.ch"		hugo@m295.local.zli.ch
-							"password":registerPassword.value	//"Zli123"
+							"email":registerEmail,	//"hugo@m295.local.zli.ch"		hugo@m295.local.zli.ch
+							"password":registerPassword	//"Zli123"
 						}),
 						headers: {
 							'Content-Type': 'application/json'
@@ -134,6 +163,23 @@
 					let json = await response.json()
 					//user = json.data
 					if (json.code == 200) {
+						for( const singleContent of document.getElementsByClassName("Content")){
+							singleContent.style.display = "none"
+						}
+						var x = document.getElementsByClassName("DuringAuthHide");
+						var y = document.getElementsByClassName("DuringRegisterHide");
+						var z = document.getElementById("AdminContent")
+						for (const element1 of x) {
+							for (const element2 of y) {
+								if (element2 == element1){
+									if (this.user.admin == 1){
+										element1.style.display = "block"
+									} else if (element1 != z){
+										element1.style.display = "block"
+									}
+								}
+							}
+						}
 						await this.verify(registerEmail.value, registerPassword.value)
 					} else {
 
@@ -143,24 +189,27 @@
 				} else {
 					window.alert("Uiuiui etwas ist da aber schiefgelaufen")
 				}
-			},/*addToDoItem(newToDoItem) {
-				this.todoEntries = [...this.todoEntries, newToDoItem];
-			},*/
-			async tasks(){
-				// let email = data.email;
-				document.getElementById("authenticateContent").style.display = "none"
-				document.getElementById("registerContent").style.display = "none"
-				document.getElementById("loading").style.display = "none"
-				var x = document.getElementsByClassName("DuringAuthHide");
-				var y = document.getElementsByClassName("DuringRegisterHide");
-				for (const element1 of x) {
-					for (const element2 of y) {
-						if (element2 == element1)
-						element1.style.display = "block"
-					}
+			},logout(){
+				// console.log(this.user)
+				this.user = undefined
+				this.todoEntries = []
+				for( const singleContent of document.getElementsByClassName("Content")){
+					singleContent.style.display = "block"
 				}
-				let id = user.id;
-				let token = user.token
+				var x = document.getElementsByClassName("DuringAuthHide");
+				for (const element1 of x) {
+					element1.style.display = "none"
+				}
+			},async tasks(){
+
+				var x = document.getElementsByClassName("DuringTaskHide");
+				for (const element1 of x) {
+					element1.style.display = "none"
+				}
+				// let email = data.email;
+
+				let id = this.user.id;
+				let token = this.user.token
 				const url = "http://localhost:4312/v1/tasks"
 
 				const response = await fetch(url, {
@@ -192,8 +241,8 @@
 						element1.style.display = "block"
 					}
 				}
-				let id = user.id;
-				let token = user.token
+				let id = this.user.id;
+				let token = this.user.token
 				const url = "http://localhost:4312/v1/tasks"
 
 				const response = await fetch(url, {
@@ -220,6 +269,11 @@
 				}
 			},async verify(email, password){
 				const url = "http://localhost:4312/v1/authenticate"
+				this.LoginUsername = ""
+				this.LoginPassword = ""
+				this.RegisterUsername = ""
+				this.registerPassword = ""
+				this.RegisterPasswordBest = ""
 				const response = await fetch(url, {
 					method: 'POST',
 					body: JSON.stringify({
@@ -232,18 +286,35 @@
 				})
 				const json = await response.json()
 				if (json.code == 200) {
-					user = json.data
+					this.user = json.data
+					for( const singleContent of document.getElementsByClassName("Content")){
+						singleContent.style.display = "none"
+					}
+					var x = document.getElementsByClassName("DuringAuthHide");
+					var y = document.getElementsByClassName("DuringRegisterHide");
+					var z = document.getElementById("AdminContent")
+					for (const element1 of x) {
+						for (const element2 of y) {
+							if (element2 == element1){
+								if (this.user.admin == 1){
+									element1.style.display = "block"
+								} else if (element1 != z){
+									element1.style.display = "block"
+								}
+							}
+						}
+					}
 					this.tasks()
 				} else {
 					window.alert("Uiuiui etwas ist da aber schiefgelaufen")
 				}
 			},async addToDoItem(newToDoItem){
-				let token = user.token
+				let token = this.user.token
 				const url = "http://localhost:4312/v1/tasks"
 				const response = await fetch(url, {
 					method: 'POST',
 					body: JSON.stringify({
-						"email":user.email,
+						"email":this.user.email,
 						"description": newToDoItem.title
 					}),
 					headers: {
@@ -270,12 +341,12 @@
 						}
 					}
 					this.changeEditInput(toDoId)
-					let token = user.token
+					let token = this.user.token
 					const url = `http://localhost:4312/v1/tasks/${toDoId}`
 					const response = await fetch(url, {
 						method: 'POST',
 						body: JSON.stringify({
-							"email":user.email,
+							"email":this.user.email,
 							"description": new_content
 						}),
 						headers: {
@@ -291,12 +362,12 @@
 					}
 				}
 			},async deleteToDoItem(toDoId){
-				let token = user.token
+				let token = this.user.token
 				const url = `http://localhost:4312/v1/tasks/${toDoId}`
 				const response = await fetch(url, {
 					method: 'DELETE',
 					body: JSON.stringify({
-						"email":user.email,
+						"email":this.user.email,
 					}),
 					headers: {
 						'authorization': `Bearer ${token}`,
@@ -310,9 +381,7 @@
 					window.alert("Uiuiui etwas ist da aber schiefgelaufen")
 				}
 			},async authenticate() {
-				var email = document.getElementById("emailInput").value;
-				var password = document.getElementById("passwordInput").value;
-				this.verify(email, password)
+				this.verify(this.LoginUsername, this.LoginPassword)
 			},async authenticateInput() {
 				if(event.keyCode == 13){
 					var email = document.getElementById("emailInput").value;
