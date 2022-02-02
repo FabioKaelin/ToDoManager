@@ -27,7 +27,7 @@
 		<span style="display: none" id="loading">Loading...</span>
 		<span id="Informationen"  @click="hideInformations">
 			<br>
-			Dies ist ein Forntend für den ÜK 294. <br>
+			Dies ist ein Frontend für den ÜK 294. <br>
 			Gemacht wurde dies von Fabio Kälin.
 
 			<br>
@@ -35,7 +35,7 @@
 			<b>Hinweise:</b>
 			<ul>
 
-				<li>Bitte bei Nutzung des Firefox-Browsers beachten das manche Dinge (z.B. Scrollbar) nicht richtig angezeigt werden.</li>
+				<li>Bitte bei Nutzung des Firefox-Browsers beachten, dass manche Dinge (z.B. Scrollbar) nicht richtig angezeigt werden.</li>
 				<li>Der Standart-Benutzer ist hugo@m295.local.zli.ch und das Passwort ist Zli123</li>
 			</ul>
 			<br>
